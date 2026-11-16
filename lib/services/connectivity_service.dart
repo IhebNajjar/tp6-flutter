@@ -24,7 +24,7 @@ class ConnectivityService {
   Future<bool> isSupabaseAvailable() async {
     if (_supabase == null) return false;
     try {
-      await _supabase!
+      await _supabase
           .from('clients')
           .select('id')
           .limit(1)

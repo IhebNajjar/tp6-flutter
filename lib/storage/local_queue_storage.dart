@@ -9,8 +9,10 @@ class LocalQueueStorage {
   LocalQueueStorage({Database? database}) : _overrideDb = database;
 
   Future<Database> get database async {
-    if (_overrideDb != null) return _overrideDb!;
-    if (_database != null) return _database!;
+    final overrideDb = _overrideDb;
+    if (overrideDb != null) return overrideDb;
+    final db = _database;
+    if (db != null) return db;
     final path = join(await getDatabasesPath(), 'waiting_queue.db');
     _database = await openDatabase(
       path,
