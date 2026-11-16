@@ -18,7 +18,7 @@ class QueueRepository {
 
     try {
       // Attempt to invoke the authoritative RPC function
-      final response = await _supabase!.rpc(
+      final response = await _supabase.rpc(
         'register_queue_client',
         params: {
           'p_id': client.id,
@@ -38,7 +38,7 @@ class QueueRepository {
       return client;
     } catch (e) {
       debugPrint('RPC register_queue_client failed, falling back to direct upsert: $e');
-      final data = await _supabase!
+      final data = await _supabase
           .from('clients')
           .upsert(client.toSupabaseMap())
           .select()
@@ -57,7 +57,7 @@ class QueueRepository {
     final fromIndex = offset;
     final toIndex = offset + limit - 1;
 
-    final response = await _supabase!
+    final response = await _supabase
         .from('clients')
         .select()
         .order('created_at', ascending: true)
@@ -72,7 +72,7 @@ class QueueRepository {
   /// Deletes a client from the waiting queue
   Future<void> deleteClient(String id) async {
     if (_supabase == null) return;
-    await _supabase!.from('clients').delete().eq('id', id);
+    await _supabase.from('clients').delete().eq('id', id);
   }
 
   /// Subscribes to Supabase Realtime changes on 'clients' table
@@ -82,7 +82,7 @@ class QueueRepository {
   }) {
     if (_supabase == null) return;
 
-    _channel = _supabase!
+    _channel = _supabase
         .channel('public:clients')
         .onPostgresChanges(
           event: PostgresChangeEvent.insert,
@@ -115,7 +115,7 @@ class QueueRepository {
 
   void unsubscribeRealtime() {
     if (_channel != null && _supabase != null) {
-      _supabase!.removeChannel(_channel!);
+      _supabase.removeChannel(_channel!);
       _channel = null;
     }
   }
